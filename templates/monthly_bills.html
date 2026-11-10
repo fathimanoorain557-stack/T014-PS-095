@@ -1,0 +1,305 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Monthly Bills - Apartment MS</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <h2>Apartment MS</h2>
+
+        <nav>
+            <a href="/">Dashboard</a>
+            <a href="/residents">Residents</a>
+            <a href="/bills">Monthly Bills</a>
+            <a href="/payments">Payments</a>
+            <a href="/defaulters">Defaulters</a>
+            <a href="/water">Water Readings</a>
+            <a href="/ownership">Ownership Transfer</a>
+        </nav>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+        <h1>Monthly Bills Management</h1>
+        <p>View, search and print apartment maintenance bills.</p>
+
+        <!-- SUMMARY CARDS -->
+        <section class="cards">
+
+            <div class="card">
+                <h3>Total Bills</h3>
+                <h2>{{ total_bills }}</h2>
+            </div>
+
+            <div class="card">
+                <h3>Total Billing Amount</h3>
+                <h2>₹{{ "%.2f"|format(total_amount) }}</h2>
+            </div>
+
+        </section>
+
+        <!-- SEARCH -->
+        <h2 class="chart-heading">Monthly Bill Records</h2>
+
+        <div class="search-box">
+            <input
+                type="text"
+                id="billSearch"
+                placeholder="Search by Flat ID or Month..."
+                onkeyup="searchBills()"
+            >
+        </div>
+
+        <!-- BILL TABLE -->
+        <div class="table-container">
+
+            <table class="resident-table" id="billTable">
+
+                <thead>
+                    <tr>
+                        <th>Flat ID</th>
+                        <th>Month</th>
+                        <th>Maintenance</th>
+                        <th>Sinking Fund</th>
+                        <th>Non Occupancy</th>
+                        <th>Water</th>
+                        <th>GST</th>
+                        <th>Lift AMC</th>
+                        <th>Electricity</th>
+                        <th>Generator</th>
+                        <th>Water Tanker</th>
+                        <th>Total</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for bill in bills %}
+
+                    <tr>
+                        <td>{{ bill.flat_id }}</td>
+                        <td>{{ bill.month }}</td>
+                        <td>₹{{ bill.maintenance }}</td>
+                        <td>₹{{ bill.sinking_fund }}</td>
+                        <td>₹{{ bill.non_occupancy }}</td>
+                        <td>₹{{ bill.water }}</td>
+                        <td>₹{{ bill.gst }}</td>
+                        <td>₹{{ bill.lift_amc }}</td>
+                        <td>₹{{ bill.common_electricity }}</td>
+                        <td>₹{{ bill.generator_diesel }}</td>
+                        <td>₹{{ bill.water_tanker }}</td>
+                        <td><strong>₹{{ bill.total }}</strong></td>
+
+                        <td>
+                            <button type="button" onclick="printBill(this)">
+                                Print Bill
+                            </button>
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+            <p id="noBills" style="display:none; padding:20px; text-align:center;">
+                No matching bills found.
+            </p>
+
+        </div>
+
+        <!-- FOOTER -->
+        <footer class="dashboard-footer">
+            <p>Apartment Maintenance Management System</p>
+            <p>Monthly Billing Module</p>
+        </footer>
+
+    </main>
+
+    <!-- SEARCH JAVASCRIPT -->
+    <script>
+
+    function searchBills() {
+
+        let input = document.getElementById("billSearch");
+        let filter = input.value.toLowerCase();
+
+        let table = document.getElementById("billTable");
+        let rows = table.getElementsByTagName("tr");
+
+        let visibleCount = 0;
+
+        for (let i = 1; i < rows.length; i++) {
+
+            let flatId = rows[i].cells[0].textContent.toLowerCase();
+            let month = rows[i].cells[1].textContent.toLowerCase();
+
+            if (flatId.includes(filter) || month.includes(filter)) {
+                rows[i].style.display = "";
+                visibleCount++;
+            } else {
+                rows[i].style.display = "none";
+            }
+        }
+
+        document.getElementById("noBills").style.display =
+            visibleCount === 0 ? "block" : "none";
+    }
+
+
+    // PRINT INDIVIDUAL BILL
+    function printBill(button) {
+
+        let row = button.closest("tr");
+        let cells = row.querySelectorAll("td");
+
+        let labels = [
+            "Flat ID",
+            "Billing Month",
+            "Maintenance",
+            "Sinking Fund",
+            "Non Occupancy",
+            "Water Charges",
+            "GST",
+            "Lift AMC",
+            "Common Electricity",
+            "Generator Diesel",
+            "Water Tanker",
+            "Total Amount"
+        ];
+
+        let rows = "";
+
+        for (let i = 0; i < labels.length; i++) {
+
+            rows += `
+                <tr>
+                    <td>${labels[i]}</td>
+                    <td>${cells[i].innerText}</td>
+                </tr>
+            `;
+        }
+
+        let printWindow = window.open("", "", "width=800,height=700");
+
+        if (!printWindow) {
+            alert("Please allow pop-ups to print the bill.");
+            return;
+        }
+
+        printWindow.document.write(`
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <title>Monthly Maintenance Bill</title>
+
+                <style>
+
+                    body {
+                        font-family: Arial, sans-serif;
+                        padding: 30px;
+                        color: #263248;
+                    }
+
+                    h1, h2 {
+                        text-align: center;
+                        color: #263b73;
+                    }
+
+                    p {
+                        text-align: center;
+                    }
+
+                    table {
+                        width: 100%;
+                        border-collapse: collapse;
+                        margin-top: 25px;
+                    }
+
+                    th, td {
+                        border: 1px solid #ccc;
+                        padding: 12px;
+                        text-align: left;
+                    }
+
+                    th {
+                        background: #263b73;
+                        color: white;
+                    }
+
+                    .total-row {
+                        font-weight: bold;
+                    }
+
+                    .footer {
+                        margin-top: 35px;
+                        text-align: center;
+                        color: #64748b;
+                    }
+
+                    @media print {
+                        body {
+                            padding: 15px;
+                        }
+                    }
+
+                </style>
+            </head>
+
+            <body>
+
+                <h1>Apartment Maintenance Management</h1>
+
+                <h2>Monthly Maintenance Bill</h2>
+
+                <p>Official Bill Details</p>
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>Charge Description</th>
+                            <th>Amount</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        ${rows}
+                    </tbody>
+
+                </table>
+
+                <div class="footer">
+                    <p>Generated by Apartment MS</p>
+                </div>
+
+            </body>
+            </html>
+        `);
+
+        printWindow.document.close();
+        printWindow.focus();
+
+        printWindow.onload = function() {
+            printWindow.print();
+        };
+
+    }
+
+    </script>
+
+</body>
+</html>

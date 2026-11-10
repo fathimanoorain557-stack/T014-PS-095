@@ -1,0 +1,4 @@
+﻿transfer_id,flat_id,transfer_date,previous_owner_id,previous_owner_name,new_owner_id,new_owner_name,transfer_fee_paid,transfer_fee_valid,ndc_before_transfer,transfer_status
+TRF-001,FLT-A101,2026-08-12,OWN-004,Pallavi Shetty,OWN-062,Kavya Hegde,25000.00,True,True,TRANSFER COMPLETED - NO RECORDED DUES
+TRF-002,FLT-B202,2026-09-14,OWN-038,Pradeep Gowda,OWN-063,Girish Desai,25000.00,True,False,TRANSFER BEFORE NDC - DUES CARRIED FORWARD
+TRF-003,FLT-A602,2026-10-08,OWN-020,Tejaswini Reddy,OWN-061,Nandini Agarwal,25000.00,True,True,TRANSFER COMPLETED - NO RECORDED DUES

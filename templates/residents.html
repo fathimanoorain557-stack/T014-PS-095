@@ -1,0 +1,177 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Residents - Apartment MS</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <h2>Apartment MS</h2>
+
+        <nav>
+            <a href="/">Dashboard</a>
+            <a href="/residents">Residents</a>
+            <a href="/bills">Monthly Bills</a>
+            <a href="/payments">Payments</a>
+            <a href="/defaulters">Defaulters</a>
+            <a href="/water">Water Readings</a>
+            <a href="/ownership">Ownership Transfer</a>
+        </nav>
+
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+        <h1>Residents Management</h1>
+
+        <p>View and manage all registered flats and their owners.</p>
+
+        <!-- SUMMARY CARD -->
+        <section class="cards">
+
+            <div class="card">
+
+                <h3>Total Registered Flats</h3>
+
+                <h2>{{ residents|length }}</h2>
+
+                <p>Registered apartments in the society</p>
+
+            </div>
+
+        </section>
+
+        <!-- RESIDENT SEARCH -->
+        <h2 class="chart-heading">Resident Directory</h2>
+
+        <div class="search-box">
+
+            <input
+                type="text"
+                id="residentSearch"
+                placeholder="Search by Flat ID or Owner Name..."
+                onkeyup="searchResidents()"
+            >
+
+        </div>
+
+        <!-- RESIDENT TABLE -->
+        <div class="table-container">
+
+            <table class="resident-table">
+
+                <thead>
+
+                    <tr>
+                        <th>Flat ID</th>
+                        <th>Tower</th>
+                        <th>Floor</th>
+                        <th>Owner Name</th>
+                        <th>Owner ID</th>
+                        <th>Occupancy</th>
+                        <th>Area (sq.ft.)</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for resident in residents %}
+
+                    <tr>
+
+                        <td><strong>{{ resident.flat_id }}</strong></td>
+
+                        <td>{{ resident.tower_id }}</td>
+
+                        <td>{{ resident.floor }}</td>
+
+                        <td>{{ resident.owner_name }}</td>
+
+                        <td>{{ resident.owner_id }}</td>
+
+                        <td>{{ resident.occupancy }}</td>
+
+                        <td>{{ resident.area }}</td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+            <p id="noResidents" style="display:none; padding:20px; text-align:center;">
+                No matching residents found.
+            </p>
+
+        </div>
+
+        <!-- FOOTER -->
+        <footer class="dashboard-footer">
+
+            <p>Apartment Maintenance Management System</p>
+
+            <p>Residents Management Module</p>
+
+        </footer>
+
+    </main>
+
+    <!-- SEARCH JAVASCRIPT -->
+    <script>
+
+    function searchResidents() {
+
+        let input = document.getElementById("residentSearch");
+
+        let filter = input.value.toLowerCase();
+
+        let table = document.querySelector(".resident-table");
+
+        let rows = table.getElementsByTagName("tr");
+
+        let visibleCount = 0;
+
+        for (let i = 1; i < rows.length; i++) {
+
+            let flatId = rows[i].cells[0].textContent.toLowerCase();
+
+            let ownerName = rows[i].cells[3].textContent.toLowerCase();
+
+            if (flatId.includes(filter) || ownerName.includes(filter)) {
+
+                rows[i].style.display = "";
+
+                visibleCount++;
+
+            } else {
+
+                rows[i].style.display = "none";
+
+            }
+
+        }
+
+        document.getElementById("noResidents").style.display =
+            visibleCount === 0 ? "block" : "none";
+
+    }
+
+    </script>
+
+</body>
+
+</html>

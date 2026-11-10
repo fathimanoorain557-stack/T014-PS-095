@@ -1,0 +1,4 @@
+﻿transfer_id,flat_id,transfer_date,old_owner_id,new_owner_id,principal_carried_forward,recorded_interest_carried_forward,total_recorded_dues_carried_forward,transfer_fee,dues_responsibility
+TRF-001,FLT-A101,2026-08-12,OWN-004,OWN-062,0.00,0.00,0.00,25000.00,NO RECORDED DUES
+TRF-002,FLT-B202,2026-09-14,OWN-038,OWN-063,3334.00,0.00,3334.00,25000.00,NEW OWNER
+TRF-003,FLT-A602,2026-10-08,OWN-020,OWN-061,0.00,0.00,0.00,25000.00,NO RECORDED DUES

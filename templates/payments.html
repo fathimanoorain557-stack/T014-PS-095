@@ -1,0 +1,175 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Payments - Apartment MS</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <h2>Apartment MS</h2>
+
+        <nav>
+            <a href="/">Dashboard</a>
+            <a href="/residents">Residents</a>
+            <a href="/bills">Monthly Bills</a>
+            <a href="/payments">Payments</a>
+            <a href="/defaulters">Defaulters</a>
+            <a href="/water">Water Readings</a>
+            <a href="/ownership">Ownership Transfer</a>
+        </nav>
+
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+        <h1>Payments Management</h1>
+
+        <p>View and search all recorded resident payment transactions.</p>
+
+        <!-- SUMMARY CARD -->
+        <section class="cards">
+
+            <div class="card">
+                <h3>Total Payment Records</h3>
+                <h2>{{ total_payments }}</h2>
+                <p>Successfully recorded payments</p>
+            </div>
+
+        </section>
+
+        {% if payments %}
+
+        <!-- PAYMENT RECORDS -->
+        <h2 class="chart-heading">Payment Transaction History</h2>
+
+        <!-- SEARCH -->
+        <div class="search-box">
+
+            <input
+                type="text"
+                id="paymentSearch"
+                placeholder="Search by Payment ID, Flat ID, Date or Method..."
+                onkeyup="searchPayments()"
+            >
+
+            <button type="button" onclick="clearSearch()">
+                Clear Search
+            </button>
+
+        </div>
+
+        <!-- PAYMENT TABLE -->
+        <div class="table-container">
+
+            <table class="resident-table" id="paymentTable">
+
+                <thead>
+                    <tr>
+                        {% for column in payments[0].keys() %}
+                        <th>{{ column.replace("_", " ")|title }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for payment in payments %}
+
+                    <tr>
+                        {% for value in payment.values() %}
+                        <td>{{ value }}</td>
+                        {% endfor %}
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+            <p id="noResults"
+               style="display:none; padding:20px; text-align:center;">
+                No matching payment records found.
+            </p>
+
+        </div>
+
+        {% else %}
+
+        <div class="activity">
+            <h2>No Payment Records</h2>
+            <p>No payment transactions are currently available.</p>
+        </div>
+
+        {% endif %}
+
+        <!-- FOOTER -->
+        <footer class="dashboard-footer">
+
+            <p>Apartment Maintenance Management System</p>
+
+            <p>Resident Payment Management Module</p>
+
+        </footer>
+
+    </main>
+
+    <!-- SEARCH JAVASCRIPT -->
+    <script>
+
+    function searchPayments() {
+
+        let input = document.getElementById("paymentSearch");
+        let filter = input.value.toLowerCase();
+
+        let table = document.getElementById("paymentTable");
+        let rows = table.getElementsByTagName("tr");
+
+        let visibleCount = 0;
+
+        for (let i = 1; i < rows.length; i++) {
+
+            let rowText = rows[i].innerText.toLowerCase();
+
+            if (rowText.includes(filter)) {
+
+                rows[i].style.display = "";
+                visibleCount++;
+
+            } else {
+
+                rows[i].style.display = "none";
+
+            }
+
+        }
+
+        document.getElementById("noResults").style.display =
+            visibleCount === 0 ? "block" : "none";
+
+    }
+
+
+    function clearSearch() {
+
+        document.getElementById("paymentSearch").value = "";
+
+        searchPayments();
+
+    }
+
+    </script>
+
+</body>
+</html>

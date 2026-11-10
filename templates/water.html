@@ -1,0 +1,147 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Water Readings - Apartment MS</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <aside class="sidebar">
+        <h2>Apartment MS</h2>
+
+        <nav>
+            <a href="/">Dashboard</a>
+            <a href="/residents">Flat & Owners</a>
+            <a href="/bills">Monthly Bills</a>
+            <a href="/payments">Payments</a>
+            <a href="/defaulters">Defaulters</a>
+            <a href="/water">Water Readings</a>
+            <a href="/ownership">Ownership Transfer</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+
+        <header class="topbar">
+            <h1>Water Readings</h1>
+            <p>Water consumption and charge management</p>
+        </header>
+
+        <section class="cards">
+
+            <div class="card">
+                <h3>Total Readings</h3>
+                <h2>{{ total_readings }}</h2>
+            </div>
+
+            <div class="card">
+                <h3>Total Consumption</h3>
+                <h2>{{ "%.2f"|format(total_consumption) }} KL</h2>
+            </div>
+
+            <div class="card">
+                <h3>Total Water Charges</h3>
+                <h2>₹{{ "%.2f"|format(total_water_charges) }}</h2>
+            </div>
+
+        </section>
+
+        <section class="table-section">
+
+            <h2>Monthly Meter Reading Records</h2>
+
+            <div class="search-box">
+                <input
+                    type="text"
+                    id="waterSearch"
+                    placeholder="Search by Flat ID or Reading ID..."
+                >
+                <button type="button" id="clearWaterSearch">Clear</button>
+            </div>
+
+            <div class="table-container">
+
+                <table id="waterTable">
+
+                    <thead>
+                        <tr>
+                            <th>Reading ID</th>
+                            <th>Flat ID</th>
+                            <th>Reading Date</th>
+                            <th>Previous Reading</th>
+                            <th>Current Reading</th>
+                            <th>Consumption (KL)</th>
+                            <th>Calculation Method</th>
+                            <th>Water Charge</th>
+                            <th>Remarks</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {% for reading in readings %}
+                        <tr>
+                            <td>{{ reading.reading_id }}</td>
+                            <td>{{ reading.flat_id }}</td>
+                            <td>{{ reading.reading_date }}</td>
+                            <td>{{ reading.previous_reading }}</td>
+                            <td>{{ reading.reading_kl }}</td>
+                            <td>{{ "%.2f"|format(reading.consumption) }}</td>
+                            <td>{{ reading.method }}</td>
+                            <td>₹{{ "%.2f"|format(reading.charge) }}</td>
+                            <td>{{ reading.remarks or "-" }}</td>
+                        </tr>
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+                <p id="noWaterResults" style="display:none;">
+                    No matching water readings found.
+                </p>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <script>
+        const waterSearch = document.getElementById("waterSearch");
+        const clearWaterSearch = document.getElementById("clearWaterSearch");
+        const waterRows = document.querySelectorAll("#waterTable tbody tr");
+        const noWaterResults = document.getElementById("noWaterResults");
+
+        function filterWaterReadings() {
+            const filter = waterSearch.value.trim().toLowerCase();
+            let visibleCount = 0;
+
+            waterRows.forEach(function(row) {
+                const matches = row.textContent.toLowerCase().includes(filter);
+
+                row.style.display = matches ? "" : "none";
+
+                if (matches) {
+                    visibleCount++;
+                }
+            });
+
+            noWaterResults.style.display =
+                visibleCount === 0 ? "block" : "none";
+        }
+
+        waterSearch.addEventListener("input", filterWaterReadings);
+
+        clearWaterSearch.addEventListener("click", function() {
+            waterSearch.value = "";
+            filterWaterReadings();
+        });
+    </script>
+
+</body>
+</html>

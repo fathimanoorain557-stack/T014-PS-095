@@ -1,0 +1,246 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Defaulters - Apartment MS</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <h2>Apartment MS</h2>
+
+        <nav>
+            <a href="/">Dashboard</a>
+            <a href="/residents">Residents</a>
+            <a href="/bills">Monthly Bills</a>
+            <a href="/payments">Payments</a>
+            <a href="/defaulters">Defaulters</a>
+            <a href="/water">Water Readings</a>
+            <a href="/ownership">Ownership Transfer</a>
+        </nav>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+        <h1>Defaulters Management</h1>
+
+        <p>View flats with overdue unpaid maintenance bills.</p>
+
+
+        <!-- REPORT LOOP -->
+        {% for report in reports %}
+
+        <h2>Report Date: {{ report.date }}</h2>
+
+
+        <!-- CALCULATE TOTAL OVERDUE PRINCIPAL -->
+        {% set ns = namespace(total=0.0) %}
+
+        {% for item in report.records %}
+            {% set ns.total = ns.total + (item.get('overdue_principal', 0)|float) %}
+        {% endfor %}
+
+
+        <!-- SUMMARY CARDS -->
+        <section class="cards">
+
+            <div class="card">
+                <h3>Total Overdue Principal</h3>
+                <h2>₹{{ "%.2f"|format(ns.total) }}</h2>
+            </div>
+
+            <div class="card">
+                <h3>Total Defaulter Flats</h3>
+                <h2>{{ report.records|length }}</h2>
+            </div>
+
+        </section>
+
+
+        {% if report.records %}
+
+
+        <!-- SEARCH SECTION -->
+        <div class="search-box">
+
+            <input
+                type="text"
+                id="defaulterSearch{{ loop.index }}"
+                data-report="{{ loop.index }}"
+                placeholder="Search by Flat ID..."
+            >
+
+            <button
+                type="button"
+                class="clear-search"
+                data-report="{{ loop.index }}">
+                Clear
+            </button>
+
+        </div>
+
+
+        <!-- DEFAULTERS TABLE -->
+        <div class="table-container">
+
+            <table
+                class="resident-table"
+                id="defaulterTable{{ loop.index }}">
+
+                <thead>
+
+                    <tr>
+
+                        {% for column in report.records[0].keys() %}
+
+                        <th>
+                            {{ column.replace("_", " ")|title }}
+                        </th>
+
+                        {% endfor %}
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for item in report.records %}
+
+                    <tr>
+
+                        {% for value in item.values() %}
+
+                        <td>{{ value }}</td>
+
+                        {% endfor %}
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+
+            <!-- NO RESULTS MESSAGE -->
+            <p
+                id="noResults{{ loop.index }}"
+                style="display: none;">
+
+                No matching flat found.
+
+            </p>
+
+        </div>
+
+
+        {% else %}
+
+        <p>No defaulters found for this report date.</p>
+
+        {% endif %}
+
+
+        {% endfor %}
+
+
+        <!-- BACK BUTTON -->
+        <p>
+            <a href="/">← Back to Dashboard</a>
+        </p>
+
+    </main>
+
+
+    <!-- SEARCH JAVASCRIPT -->
+    <script>
+
+        // SEARCH DEFAULTERS
+        document.querySelectorAll("[id^='defaulterSearch']").forEach(function(input) {
+
+            input.addEventListener("input", function() {
+
+                const reportNumber = input.dataset.report;
+
+                const table = document.getElementById(
+                    "defaulterTable" + reportNumber
+                );
+
+                const noResults = document.getElementById(
+                    "noResults" + reportNumber
+                );
+
+                if (!table || !noResults) {
+                    return;
+                }
+
+                const filter = input.value.trim().toLowerCase();
+
+                const rows = table.querySelectorAll("tbody tr");
+
+                let visibleCount = 0;
+
+                rows.forEach(function(row) {
+
+                    const rowText = row.textContent.toLowerCase();
+
+                    const matches = rowText.includes(filter);
+
+                    row.style.display = matches ? "" : "none";
+
+                    if (matches) {
+                        visibleCount++;
+                    }
+
+                });
+
+                noResults.style.display =
+                    visibleCount === 0 ? "block" : "none";
+
+            });
+
+        });
+
+
+        // CLEAR SEARCH
+        document.querySelectorAll(".clear-search").forEach(function(button) {
+
+            button.addEventListener("click", function() {
+
+                const reportNumber = button.dataset.report;
+
+                const input = document.getElementById(
+                    "defaulterSearch" + reportNumber
+                );
+
+                if (input) {
+
+                    input.value = "";
+
+                    input.dispatchEvent(new Event("input"));
+
+                }
+
+            });
+
+        });
+
+    </script>
+
+</body>
+</html>

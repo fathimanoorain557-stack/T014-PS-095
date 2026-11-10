@@ -1,0 +1,325 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apartment Management Dashboard</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+    <aside class="sidebar">
+        <h2>Apartment MS</h2>
+
+        <nav>
+            <a href="/">Dashboard</a>
+            <a href="/residents">Residents</a>
+            <a href="/bills">Monthly Bills</a>
+            <a href="/payments">Payments</a>
+            <a href="/defaulters">Defaulters</a>
+            <a href="/water">Water Readings</a>
+            <a href="/ownership">Ownership Transfer</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+
+        <h1>Dashboard</h1>
+        <p>Apartment Maintenance Management System</p>
+
+        <section class="welcome">
+            <h2>Welcome to Apartment Management</h2>
+            <p>Manage your society billing and payments in one place.</p>
+            <p>Latest billing month: {{ latest_month }}</p>
+        </section>
+
+        <!-- DASHBOARD CARDS -->
+        <section class="cards">
+
+            <div class="card">
+                <h3>Total Flats</h3>
+                <h2>{{ total_flats }}</h2>
+            </div>
+
+            <div class="card">
+                <h3>Total Towers</h3>
+                <h2>{{ total_towers }}</h2>
+            </div>
+
+            <div class="card">
+                <h3>Monthly Bills</h3>
+                <h2>{{ monthly_bills }}</h2>
+            </div>
+
+            <div class="card">
+                <h3>Flats with Outstanding Balances</h3>
+                <h2>{{ pending_payments }}</h2>
+            </div>
+
+            <div class="card">
+                <h3>Total Outstanding</h3>
+                <h2>₹{{ "%.2f"|format(total_outstanding) }}</h2>
+            </div>
+
+            <div class="card">
+                <h3>Total Payment Collection</h3>
+                <h2>₹{{ "%.2f"|format(total_payment_collection) }}</h2>
+            </div>
+
+            <div class="card">
+                <h3>Total Society Expenses</h3>
+                <h2>₹{{ "%.2f"|format(total_expenses) }}</h2>
+            </div>
+
+        </section>
+
+        <!-- FINANCIAL OVERVIEW -->
+        <h2 class="chart-heading">Financial Overview</h2>
+
+        <section class="chart-container">
+
+            <div class="chart-card">
+                <h3>Monthly Billing Trends</h3>
+                <canvas id="billingChart"></canvas>
+            </div>
+
+            <div class="chart-card">
+                <h3>Monthly Payment Collection</h3>
+                <canvas id="paymentChart"></canvas>
+            </div>
+
+        </section>
+
+        <!-- OUTSTANDING BALANCES -->
+        <h2 class="chart-heading">Outstanding Balances</h2>
+
+        <section class="chart-card outstanding-chart">
+
+            <h3>Top Flats with Outstanding Amounts</h3>
+
+            {% if outstanding_labels %}
+                <canvas id="outstandingChart"></canvas>
+            {% else %}
+                <p>No outstanding balances currently.</p>
+            {% endif %}
+
+        </section>
+
+        <!-- OCCUPANCY DISTRIBUTION -->
+        <h2 class="chart-heading">Occupancy Distribution</h2>
+
+        <section class="chart-card">
+
+            <h3>Flat Occupancy Status</h3>
+
+            <div style="max-width: 450px; margin: auto;">
+                <canvas id="occupancyChart"></canvas>
+            </div>
+
+        </section>
+
+        <!-- FOOTER -->
+        <footer class="dashboard-footer">
+            <p>Apartment Maintenance Management System</p>
+            <p>Designed for efficient society management</p>
+        </footer>
+
+    </main>
+
+    <!-- FLASK DATA -->
+    <div
+        id="chartData"
+        hidden
+        data-months="{{ chart_months | tojson | forceescape }}"
+        data-billing="{{ billing_chart | tojson | forceescape }}"
+        data-payments="{{ payment_chart | tojson | forceescape }}"
+        data-outstanding-labels="{{ outstanding_labels | tojson | forceescape }}"
+        data-outstanding-values="{{ outstanding_values | tojson | forceescape }}"
+        data-occupancy-labels="{{ occupancy_labels | tojson | forceescape }}"
+        data-occupancy-values="{{ occupancy_values | tojson | forceescape }}">
+    </div>
+
+    <!-- JAVASCRIPT CHARTS -->
+    <script>
+
+        // READ DATA FROM FLASK
+        const chartElement = document.getElementById("chartData");
+
+        const months = JSON.parse(chartElement.dataset.months);
+        const billingData = JSON.parse(chartElement.dataset.billing);
+        const paymentData = JSON.parse(chartElement.dataset.payments);
+
+        const outstandingLabels = JSON.parse(
+            chartElement.dataset.outstandingLabels
+        );
+
+        const outstandingData = JSON.parse(
+            chartElement.dataset.outstandingValues
+        );
+
+        const occupancyLabels = JSON.parse(
+            chartElement.dataset.occupancyLabels
+        );
+
+        const occupancyValues = JSON.parse(
+            chartElement.dataset.occupancyValues
+        );
+
+        // MONTHLY BILLING CHART
+        const billingCanvas = document.getElementById("billingChart");
+
+        if (billingCanvas) {
+
+            new Chart(billingCanvas, {
+                type: "bar",
+
+                data: {
+                    labels: months,
+
+                    datasets: [{
+                        label: "Total Billing Amount (₹)",
+                        data: billingData,
+                        backgroundColor: "#4267b2",
+                        borderRadius: 6
+                    }]
+                },
+
+                options: {
+                    responsive: true,
+
+                    plugins: {
+                        legend: {
+                            display: true
+                        }
+                    },
+
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+        }
+
+        // MONTHLY PAYMENT CHART
+        const paymentCanvas = document.getElementById("paymentChart");
+
+        if (paymentCanvas) {
+
+            new Chart(paymentCanvas, {
+                type: "line",
+
+                data: {
+                    labels: months,
+
+                    datasets: [{
+                        label: "Payment Collection (₹)",
+                        data: paymentData,
+                        borderColor: "#16a085",
+                        backgroundColor: "rgba(22,160,133,0.15)",
+                        fill: true,
+                        tension: 0.3
+                    }]
+                },
+
+                options: {
+                    responsive: true,
+
+                    plugins: {
+                        legend: {
+                            display: true
+                        }
+                    },
+
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+        }
+
+        // OUTSTANDING BALANCE CHART
+        const outstandingCanvas =
+            document.getElementById("outstandingChart");
+
+        if (outstandingCanvas) {
+
+            new Chart(outstandingCanvas, {
+                type: "bar",
+
+                data: {
+                    labels: outstandingLabels,
+
+                    datasets: [{
+                        label: "Outstanding Amount (₹)",
+                        data: outstandingData,
+                        backgroundColor: "#e67e22",
+                        borderRadius: 5
+                    }]
+                },
+
+                options: {
+                    indexAxis: "y",
+                    responsive: true,
+
+                    plugins: {
+                        legend: {
+                            display: true
+                        }
+                    },
+
+                    scales: {
+                        x: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+        }
+
+        // OCCUPANCY PIE CHART
+        const occupancyCanvas =
+            document.getElementById("occupancyChart");
+
+        if (occupancyCanvas) {
+
+            new Chart(occupancyCanvas, {
+                type: "pie",
+
+                data: {
+                    labels: occupancyLabels,
+
+                    datasets: [{
+                        label: "Number of Flats",
+                        data: occupancyValues
+                    }]
+                },
+
+                options: {
+                    responsive: true,
+
+                    plugins: {
+                        legend: {
+                            position: "bottom"
+                        }
+                    }
+                }
+            });
+
+        }
+
+    </script>
+
+</body>
+</html>
