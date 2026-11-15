@@ -1,0 +1,18 @@
+rate_code,description,value,unit,effective_from
+MAINT_PER_SQFT,Maintenance per sq ft super built-up per month,3.50,Rs_per_sqft,2025-11-01
+MAINT_PER_SQFT,Maintenance per sq ft (revised by AGM),3.75,Rs_per_sqft,2026-02-01
+SINKING_PER_SQFT,Sinking fund per sq ft per month,0.50,Rs_per_sqft,2025-11-01
+NON_OCCUPANCY_PCT,Non-occupancy charge on maintenance for tenant flats,10.00,percent,2025-11-01
+VACANT_MAINT_PCT,Share of maintenance payable by a full-month vacant flat,50.00,percent,2025-11-01
+WATER_PER_KL,Metered water per kilolitre,25.00,Rs_per_kl,2025-11-01
+WATER_PER_HEAD,Unmetered water per declared resident per month,150.00,Rs_per_head,2025-11-01
+PARKING_COVERED,Covered parking slot per month,500.00,Rs_per_slot,2025-11-01
+PARKING_OPEN,Open parking slot per month,250.00,Rs_per_slot,2025-11-01
+UNAUTH_PARKING,Unauthorised second car per month from complaint month,1000.00,Rs_per_month,2025-11-01
+GST_PCT,GST on maintenance when thresholds met,18.00,percent,2025-11-01
+GST_MAINT_THRESHOLD,Monthly maintenance above which GST applies,7500.00,Rs,2025-11-01
+GST_SOCIETY_THRESHOLD,Society annual collection above which GST applies,2000000.00,Rs,2025-11-01
+INTEREST_PA_PCT,"Simple interest on overdue principal, per annum",18.00,percent,2025-11-01
+LEGAL_CHARGE,One-time legal charge on entering LEGAL,2500.00,Rs,2025-11-01
+TRANSFER_FEE,Transfer fee required for a no-dues certificate,25000.00,Rs,2025-11-01
+ADVANCE_DISCOUNT_PCT,Discount on maintenance for 12-month advance,3.00,percent,2025-11-01

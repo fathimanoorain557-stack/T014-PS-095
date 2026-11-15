@@ -1,0 +1,5 @@
+flat_id,request_date,outstanding_principal,outstanding_interest,outstanding_legal,transfer_fee_paid,decision,reason,dues_carried_to_owner_id
+FLT-A602,2026-07-20,18965.63,0.00,2500.00,0.00,REFUSED,Outstanding principal,
+FLT-A101,2026-08-10,18.36,0.00,0.00,25000.00,REFUSED,Outstanding principal,OWN-062
+FLT-B202,2026-09-15,8446.00,0.00,0.00,25000.00,REFUSED,Outstanding principal,OWN-063
+FLT-A602,2026-10-05,0.00,0.00,0.00,25000.00,ISSUED,,

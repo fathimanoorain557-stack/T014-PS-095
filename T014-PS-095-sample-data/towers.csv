@@ -1,0 +1,3 @@
+tower_id,tower_name,floors,has_lift
+TWR-A,Tower A,10,true
+TWR-B,Tower B,10,true
