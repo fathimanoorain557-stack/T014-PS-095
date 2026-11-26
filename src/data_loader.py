@@ -6,7 +6,7 @@ from pathlib import Path
 PROJECT_DIR = Path(__file__).resolve().parent.parent
 
 # Find the sample data folder
-DATA_DIR = PROJECT_DIR / "T014-PS-095-sample-data"
+DATA_DIR = PROJECT_DIR / "T014-PS-095-Data"
 
 
 # STEP 1: Load all CSV files
