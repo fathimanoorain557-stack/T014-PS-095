@@ -202,9 +202,9 @@ The sample dataset contains 60 flats and commands covering billing, payments, ad
 
 ## 12. Design Documentation
 
-The detailed system design, architecture, modules, processing flow, business rules, data handling and testing approach are documented in:
+The detailed system design, architecture, modules, processing flow, business rules, data handling and testing approach are documented in the following PDF:
 
-**Design_Document.pdf**
+[View Design_Document.pdf](./Design_Document.pdf)
 
 ## 13. Demo Video
 
