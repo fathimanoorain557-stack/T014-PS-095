@@ -1,9 +1,9 @@
 # PS-095 – Housing Society Maintenance Billing, Dues and Common-Area Cost Allocation Engine
 
-**Team ID:** T014
-**Project:** PS-095
-**Institute:** Atria Institute of Technology
-**Department:** Computer Science and Data Science Engineering
+**Team ID:** T014  
+**Project Code:** PS-095  
+**Institute:** Atria Institute of Technology, Bengaluru  
+**Department:** Computer Science and Data Science Engineering  
 **Semester:** 5th Semester – CSDS A
 
 ## Team Members
@@ -27,7 +27,7 @@ The application generates structured CSV reports for billing, financial transact
 
 - Automate monthly apartment maintenance billing.
 - Calculate charges using configurable rates and applicable business rules.
-- Allocate common-area expenses fairly among eligible flats.
+- Allocate common-area expenses among eligible flats.
 - Track payments, outstanding balances and advance credits.
 - Calculate interest on overdue payments.
 - Identify defaulters and record changes in defaulter status.
@@ -36,13 +36,13 @@ The application generates structured CSV reports for billing, financial transact
 
 ## 3. Technologies Used
 
-| Technology           | Purpose                         |
-| -------------------- | ------------------------------- |
-| Python               | Application development         |
-| CSV                  | Input data and output reports   |
-| Decimal              | Accurate financial calculations |
-| unittest             | Automated testing               |
-| PowerShell / VS Code | Development and execution       |
+| Technology | Purpose |
+|---|---|
+| Python | Application development |
+| CSV | Input data and output reports |
+| Decimal | Accurate financial calculations |
+| unittest | Automated testing |
+| PowerShell / VS Code | Development and execution |
 
 The project uses Python standard-library modules and does not require external packages.
 
@@ -61,10 +61,8 @@ T014-PS-095/
 │   └── billing.py
 │
 ├── tests/
-│   ├── test_billing.py
-│   └── test_charges.py
 │
-├── TP14-PS-095-Data/
+├── T014-PS-095-Data/
 │   ├── society.csv
 │   ├── rates.csv
 │   ├── towers.csv
@@ -99,7 +97,7 @@ Allocates common electricity, generator diesel, lift maintenance and tanker expe
 
 ### 5.4 GST Calculation
 
-Applies GST when the configured society collection threshold and flat-level maintenance conditions are satisfied.
+Applies GST according to the configured collection threshold and applicable billing conditions.
 
 ### 5.5 Payment Management
 
@@ -111,7 +109,7 @@ Calculates overdue interest and tracks changes in defaulter status.
 
 ### 5.7 Advance Payments
 
-Supports advance maintenance payments and the applicable discount rules.
+Supports advance maintenance payments and applicable discount rules.
 
 ### 5.8 NDC and Ownership Transfer
 
@@ -123,18 +121,18 @@ Generates detailed CSV reports for bills, ledger entries, defaulter timelines, s
 
 ## 6. Input Data
 
-The application reads its sample data from the `TP14-PS-095-Data` directory.
+The application reads its sample data from the `T014-PS-095-Data` directory.
 
-| File               | Description                                                  |
-| ------------------ | ------------------------------------------------------------ |
-| society.csv        | Society-level information and configuration                  |
-| rates.csv          | Applicable maintenance and charge rates                      |
-| towers.csv         | Tower information                                            |
-| flats.csv          | Flat details, area and occupancy information                 |
-| owners.csv         | Owner information                                            |
-| expenses.csv       | Society expense records                                      |
-| meter_readings.csv | Water meter readings                                         |
-| commands.txt       | Payment, billing, transfer and other processing instructions |
+| File | Description |
+|---|---|
+| society.csv | Society-level information and configuration |
+| rates.csv | Applicable maintenance and charge rates |
+| towers.csv | Tower information |
+| flats.csv | Flat details, area and occupancy information |
+| owners.csv | Owner information |
+| expenses.csv | Society expense records |
+| meter_readings.csv | Water meter readings |
+| commands.txt | Payment, billing, transfer and other processing instructions |
 
 ## 7. Requirements
 
@@ -172,13 +170,13 @@ The test suite checks important billing calculations, validation rules and charg
 
 ## 9. Generated Output Files
 
-| Output file            | Description                         |
-| ---------------------- | ----------------------------------- |
-| bills.csv              | Monthly bills and charge details    |
-| ledger.csv             | Financial transactions and balances |
-| defaulter_timeline.csv | Defaulter status changes            |
-| settlements.csv        | NDC and settlement records          |
-| income_statement.csv   | Income and expense summary          |
+| Output file | Description |
+|---|---|
+| bills.csv | Monthly bills and charge details |
+| ledger.csv | Financial transactions and balances |
+| defaulter_timeline.csv | Defaulter status changes |
+| settlements.csv | NDC and settlement records |
+| income_statement.csv | Income and expense summary |
 
 The output files are stored in the `outputs` directory.
 
@@ -206,15 +204,16 @@ The sample dataset contains 60 flats and commands covering billing, payments, ad
 
 The detailed system design, architecture, modules, processing flow, business rules, data handling and testing approach are documented in:
 
-`PS-095_Design_Document.pdf`
+**Design_Document.pdf**
 
 ## 13. Demo Video
 
-**Demo Video Link:** To be added after recording the project demonstration.
+Watch our project demonstration:
+
+[PS-095 – Demo Video](https://drive.google.com/file/d/1Enr522c_acVDjQ96Gaye5_vcY0Efs5HM/view?usp=drivesdk)
 
 ## 14. Conclusion
 
 The project provides an automated approach to housing society maintenance billing and financial management. It combines configurable billing rules, common-area expense allocation, payment tracking, interest calculation, defaulter monitoring and report generation in one Python application.
 
 It aims to improve calculation accuracy, transparency and efficiency in routine housing society accounting operations.
-
